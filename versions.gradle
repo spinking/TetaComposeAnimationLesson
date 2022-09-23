@@ -1,0 +1,6 @@
+ext{
+    kotlin_version = "1.7.0"
+    compose_version = "1.2.0"
+    compose_activity_version="1.5.1"
+    compose_constraint_version="1.0.1"
+}
