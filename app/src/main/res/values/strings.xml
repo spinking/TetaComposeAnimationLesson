@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">TetaAnimationComposeLesson</string>
+
+    <!--CardsScreen-->
+    <string name="cards_title">Compose Animations</string>
+    <string name="cards_subtitle">certificate of excellence</string>
 </resources>
