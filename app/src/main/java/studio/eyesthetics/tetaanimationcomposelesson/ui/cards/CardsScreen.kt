@@ -5,14 +5,20 @@ import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.interaction.*
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import studio.eyesthetics.tetaanimationcomposelesson.R
@@ -86,6 +92,18 @@ fun CardsScreen() {
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
+        Text(
+            text = "Certificates",
+            style = MaterialTheme.typography.h5,
+            color = ColorBlack,
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .fillMaxWidth()
+                    //Worked only for 12 Android and above
+                .blur(radius = if (firstCardScale.value == CardsCompanionObject.FIRST_CARD_SCALE) 0.dp else 8.dp),
+            textAlign = TextAlign.Center
+        )
+
         Card(
             color = ColorRedMonza50,
             modifier = Modifier
@@ -134,13 +152,16 @@ fun CardsScreen() {
                     detectDragGestures(
                         onDrag = { change, dragAmount ->
                             scope.launch {
-                                thirdCardOffset.value = thirdCardOffset.value.first + dragAmount.x to thirdCardOffset.value.second + dragAmount.y
+                                thirdCardOffset.value =
+                                    thirdCardOffset.value.first + dragAmount.x to thirdCardOffset.value.second + dragAmount.y
 
                                 delay(CardsCompanionObject.DEFAULT_CARD_ANIMATION_DELAY)
-                                secondCardOffset.value = secondCardOffset.value.first + dragAmount.x to secondCardOffset.value.second + dragAmount.y
+                                secondCardOffset.value =
+                                    secondCardOffset.value.first + dragAmount.x to secondCardOffset.value.second + dragAmount.y
 
                                 delay(CardsCompanionObject.DEFAULT_CARD_ANIMATION_DELAY)
-                                firstCardOffset.value = firstCardOffset.value.first + dragAmount.x to firstCardOffset.value.second + dragAmount.y
+                                firstCardOffset.value =
+                                    firstCardOffset.value.first + dragAmount.x to firstCardOffset.value.second + dragAmount.y
                             }
                         },
                         onDragEnd = {
@@ -149,12 +170,14 @@ fun CardsScreen() {
 
                                 delay(CardsCompanionObject.DEFAULT_CARD_ANIMATION_DELAY)
                                 secondCardOffset.value = CardsCompanionObject.DEFAULT_OFFSET
-                                secondCardRotate.value = CardsCompanionObject.SECOND_CARD_ROTATE_DEGREE
+                                secondCardRotate.value =
+                                    CardsCompanionObject.SECOND_CARD_ROTATE_DEGREE
                                 secondCardScale.value = CardsCompanionObject.SECOND_CARD_SCALE
 
                                 delay(CardsCompanionObject.DEFAULT_CARD_ANIMATION_DELAY)
                                 firstCardOffset.value = CardsCompanionObject.DEFAULT_OFFSET
-                                firstCardRotate.value = CardsCompanionObject.FIRST_CARD_ROTATE_DEGREE
+                                firstCardRotate.value =
+                                    CardsCompanionObject.FIRST_CARD_ROTATE_DEGREE
                                 firstCardScale.value = CardsCompanionObject.FIRST_CARD_SCALE
                             }
                         }
