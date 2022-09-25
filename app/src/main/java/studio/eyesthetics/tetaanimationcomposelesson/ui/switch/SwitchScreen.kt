@@ -13,6 +13,7 @@ import studio.eyesthetics.tetaanimationcomposelesson.ui.custom.CustomSwitch
 fun SwitchScreen() {
     Box(modifier = Modifier
         .fillMaxSize()
+        .padding(16.dp)
     ) {
         val isSwitched = remember { mutableStateOf(false) }
 
