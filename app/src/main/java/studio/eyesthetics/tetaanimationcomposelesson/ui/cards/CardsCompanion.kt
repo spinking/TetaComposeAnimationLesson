@@ -1,6 +1,6 @@
 package studio.eyesthetics.tetaanimationcomposelesson.ui.cards
 
-object CardsCompanionObject {
+object CardsCompanion {
     const val DEFAULT_CARD_ROTATE_DEGREE = 0f
     const val FIRST_CARD_ROTATE_DEGREE = 10f
     const val SECOND_CARD_ROTATE_DEGREE = 5f

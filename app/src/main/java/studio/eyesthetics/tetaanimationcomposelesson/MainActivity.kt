@@ -3,8 +3,7 @@ package studio.eyesthetics.tetaanimationcomposelesson
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import studio.eyesthetics.tetaanimationcomposelesson.ui.cards.CardsScreen
-import studio.eyesthetics.tetaanimationcomposelesson.ui.switch.SwitchScreen
+import studio.eyesthetics.tetaanimationcomposelesson.ui.main.MainScreen
 import studio.eyesthetics.tetaanimationcomposelesson.ui.theme.TetaAnimationComposeLessonTheme
 
 class MainActivity : ComponentActivity() {
@@ -12,7 +11,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             TetaAnimationComposeLessonTheme {
-                CardsScreen()
+                MainScreen()
             }
         }
     }

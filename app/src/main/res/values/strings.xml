@@ -4,4 +4,10 @@
     <!--CardsScreen-->
     <string name="cards_title">Compose Animations</string>
     <string name="cards_subtitle">certificate of excellence</string>
+
+    <!--MainScreen-->
+    <string-array name="tab_titles">
+        <item>Advanced</item>
+        <item>Basic</item>
+    </string-array>
 </resources>

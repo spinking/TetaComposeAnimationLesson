@@ -34,56 +34,62 @@ fun CardsScreen() {
     val localDensity = LocalDensity.current
     val interactionSource = remember { MutableInteractionSource() }
 
+    val isBlur = remember { mutableStateOf(false) }
+
     //Transition animation
-    val firstCardOffset = remember { mutableStateOf(CardsCompanionObject.DEFAULT_OFFSET) }
+    val firstCardOffset = remember { mutableStateOf(CardsCompanion.DEFAULT_OFFSET) }
     val firstCardAnimatePositionX = animateFloatAsState(targetValue = firstCardOffset.value.first)
     val firstCardAnimatePositionY = animateFloatAsState(targetValue = firstCardOffset.value.second)
 
-    val secondCardOffset = remember { mutableStateOf(CardsCompanionObject.DEFAULT_OFFSET) }
+    val secondCardOffset = remember { mutableStateOf(CardsCompanion.DEFAULT_OFFSET) }
     val secondCardAnimatePositionX = animateFloatAsState(targetValue = secondCardOffset.value.first)
     val secondCardAnimatePositionY = animateFloatAsState(targetValue = secondCardOffset.value.second)
 
-    val thirdCardOffset = remember { mutableStateOf(CardsCompanionObject.DEFAULT_OFFSET) }
+    val thirdCardOffset = remember { mutableStateOf(CardsCompanion.DEFAULT_OFFSET) }
     val thirdCardAnimatePositionX = animateFloatAsState(targetValue = thirdCardOffset.value.first)
     val thirdCardAnimatePositionY = animateFloatAsState(targetValue = thirdCardOffset.value.second)
 
     //Rotation animation
-    val firstCardRotate = remember { mutableStateOf(CardsCompanionObject.FIRST_CARD_ROTATE_DEGREE) }
+    val firstCardRotate = remember { mutableStateOf(CardsCompanion.FIRST_CARD_ROTATE_DEGREE) }
     val firstCardAnimateRotate = animateFloatAsState(targetValue = firstCardRotate.value)
 
-    val secondCardRotate = remember { mutableStateOf(CardsCompanionObject.SECOND_CARD_ROTATE_DEGREE) }
+    val secondCardRotate = remember { mutableStateOf(CardsCompanion.SECOND_CARD_ROTATE_DEGREE) }
     val secondCardAnimateRotate = animateFloatAsState(targetValue = secondCardRotate.value)
 
     //Scale animation
-    val firstCardScale = remember { mutableStateOf(CardsCompanionObject.FIRST_CARD_SCALE) }
+    val firstCardScale = remember { mutableStateOf(CardsCompanion.FIRST_CARD_SCALE) }
     val firstCardAnimateScale = animateFloatAsState(targetValue = firstCardScale.value)
 
-    val secondCardScale = remember { mutableStateOf(CardsCompanionObject.SECOND_CARD_SCALE) }
+    val secondCardScale = remember { mutableStateOf(CardsCompanion.SECOND_CARD_SCALE) }
     val secondCardAnimateScale = animateFloatAsState(targetValue = secondCardScale.value)
 
     LaunchedEffect(interactionSource) {
         interactionSource.interactions.collect { interaction ->
             when (interaction) {
                 is PressInteraction.Press -> {
-                    firstCardOffset.value = firstCardOffset.value.first to firstCardOffset.value.second - with(localDensity) { CardsCompanionObject.VERTICAL_CARD_PADDING * density * 2 }
-                    firstCardRotate.value = CardsCompanionObject.DEFAULT_CARD_ROTATE_DEGREE
-                    firstCardScale.value = CardsCompanionObject.DEFAULT_SCALE
+                    firstCardOffset.value = firstCardOffset.value.first to firstCardOffset.value.second - with(localDensity) { CardsCompanion.VERTICAL_CARD_PADDING * density * 2 }
+                    firstCardRotate.value = CardsCompanion.DEFAULT_CARD_ROTATE_DEGREE
+                    firstCardScale.value = CardsCompanion.DEFAULT_SCALE
 
-                    secondCardOffset.value = secondCardOffset.value.first to secondCardOffset.value.second - with(localDensity) { CardsCompanionObject.VERTICAL_CARD_PADDING * density }
-                    secondCardRotate.value = CardsCompanionObject.DEFAULT_CARD_ROTATE_DEGREE
-                    secondCardScale.value = CardsCompanionObject.DEFAULT_SCALE
+                    secondCardOffset.value = secondCardOffset.value.first to secondCardOffset.value.second - with(localDensity) { CardsCompanion.VERTICAL_CARD_PADDING * density }
+                    secondCardRotate.value = CardsCompanion.DEFAULT_CARD_ROTATE_DEGREE
+                    secondCardScale.value = CardsCompanion.DEFAULT_SCALE
+
+                    isBlur.value = true
                 }
                 is PressInteraction.Release -> {
                     //Do this transformation when press off without drag
-                    firstCardOffset.value = CardsCompanionObject.DEFAULT_OFFSET
-                    firstCardRotate.value = CardsCompanionObject.FIRST_CARD_ROTATE_DEGREE
-                    firstCardScale.value = CardsCompanionObject.FIRST_CARD_SCALE
+                    firstCardOffset.value = CardsCompanion.DEFAULT_OFFSET
+                    firstCardRotate.value = CardsCompanion.FIRST_CARD_ROTATE_DEGREE
+                    firstCardScale.value = CardsCompanion.FIRST_CARD_SCALE
 
-                    secondCardOffset.value = CardsCompanionObject.DEFAULT_OFFSET
-                    secondCardRotate.value = CardsCompanionObject.SECOND_CARD_ROTATE_DEGREE
-                    secondCardScale.value = CardsCompanionObject.SECOND_CARD_SCALE
+                    secondCardOffset.value = CardsCompanion.DEFAULT_OFFSET
+                    secondCardRotate.value = CardsCompanion.SECOND_CARD_ROTATE_DEGREE
+                    secondCardScale.value = CardsCompanion.SECOND_CARD_SCALE
 
-                    thirdCardOffset.value = CardsCompanionObject.DEFAULT_OFFSET
+                    thirdCardOffset.value = CardsCompanion.DEFAULT_OFFSET
+
+                    isBlur.value = false
                 }
             }
         }
@@ -99,8 +105,8 @@ fun CardsScreen() {
             modifier = Modifier
                 .align(Alignment.TopCenter)
                 .fillMaxWidth()
-                    //Worked only for 12 Android and above
-                .blur(radius = if (firstCardScale.value == CardsCompanionObject.FIRST_CARD_SCALE) 0.dp else 8.dp),
+                //Worked only for 12 Android and above
+                .blur(radius = if (isBlur.value) 8.dp else 0.dp),
             textAlign = TextAlign.Center
         )
 
@@ -150,35 +156,40 @@ fun CardsScreen() {
                 }
                 .pointerInput(Unit) {
                     detectDragGestures(
+                        onDragStart = {
+                            isBlur.value = true
+                        },
                         onDrag = { change, dragAmount ->
                             scope.launch {
                                 thirdCardOffset.value =
                                     thirdCardOffset.value.first + dragAmount.x to thirdCardOffset.value.second + dragAmount.y
 
-                                delay(CardsCompanionObject.DEFAULT_CARD_ANIMATION_DELAY)
+                                delay(CardsCompanion.DEFAULT_CARD_ANIMATION_DELAY)
                                 secondCardOffset.value =
                                     secondCardOffset.value.first + dragAmount.x to secondCardOffset.value.second + dragAmount.y
 
-                                delay(CardsCompanionObject.DEFAULT_CARD_ANIMATION_DELAY)
+                                delay(CardsCompanion.DEFAULT_CARD_ANIMATION_DELAY)
                                 firstCardOffset.value =
                                     firstCardOffset.value.first + dragAmount.x to firstCardOffset.value.second + dragAmount.y
                             }
                         },
                         onDragEnd = {
                             scope.launch {
-                                thirdCardOffset.value = CardsCompanionObject.DEFAULT_OFFSET
+                                thirdCardOffset.value = CardsCompanion.DEFAULT_OFFSET
 
-                                delay(CardsCompanionObject.DEFAULT_CARD_ANIMATION_DELAY)
-                                secondCardOffset.value = CardsCompanionObject.DEFAULT_OFFSET
+                                delay(CardsCompanion.DEFAULT_CARD_ANIMATION_DELAY)
+                                secondCardOffset.value = CardsCompanion.DEFAULT_OFFSET
                                 secondCardRotate.value =
-                                    CardsCompanionObject.SECOND_CARD_ROTATE_DEGREE
-                                secondCardScale.value = CardsCompanionObject.SECOND_CARD_SCALE
+                                    CardsCompanion.SECOND_CARD_ROTATE_DEGREE
+                                secondCardScale.value = CardsCompanion.SECOND_CARD_SCALE
 
-                                delay(CardsCompanionObject.DEFAULT_CARD_ANIMATION_DELAY)
-                                firstCardOffset.value = CardsCompanionObject.DEFAULT_OFFSET
+                                delay(CardsCompanion.DEFAULT_CARD_ANIMATION_DELAY)
+                                firstCardOffset.value = CardsCompanion.DEFAULT_OFFSET
                                 firstCardRotate.value =
-                                    CardsCompanionObject.FIRST_CARD_ROTATE_DEGREE
-                                firstCardScale.value = CardsCompanionObject.FIRST_CARD_SCALE
+                                    CardsCompanion.FIRST_CARD_ROTATE_DEGREE
+                                firstCardScale.value = CardsCompanion.FIRST_CARD_SCALE
+
+                                isBlur.value = false
                             }
                         }
                     )
